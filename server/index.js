@@ -88,12 +88,12 @@ app.get('/:appName', (req, res, next) => {
 
   if (!html.includes('id="web-apps-topbar"')) {
     const topbar = `
-      <div id="web-apps-topbar" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#18181b;border-bottom:1px solid #27272a;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:system-ui,-apple-system,sans-serif;">
-        <a href="/" style="color:#a1a1aa;text-decoration:none;font-size:15px;display:flex;align-items:center;gap:6px;">
-          ← <span style="font-weight:500;color:#e4e4e7;">Home</span>
+      <div id="web-apps-topbar" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#111113;border-bottom:1px solid #3f3f46;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:system-ui,-apple-system,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.4);">
+        <a href="/" style="color:#a1a1aa;text-decoration:none;font-size:15px;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;">
+          ← <span style="font-weight:600;color:#e4e4e7;">Home</span>
         </a>
-        <div style="color:#e4e4e7;font-weight:600;font-size:15px;">${appName}</div>
-        <div style="width:60px;"></div>
+        <div style="color:#f4f4f5;font-weight:600;font-size:15px;letter-spacing:-0.2px;">${appName}</div>
+        <div style="width:70px;"></div>
       </div>
       <div style="height:52px;"></div>
     `;
