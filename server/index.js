@@ -74,24 +74,19 @@ app.get('/', (req, res) => {
   res.send(html);
 });
 
-// Serve apps with a consistent top bar
-app.use((req, res, next) => {
-  const appName = req.path.split('/')[1];
-  const appPath = path.join(APPS_DIR, appName);
+// Inject top navigation bar for apps
+app.get('/:appName', (req, res, next) => {
+  const { appName } = req.params;
+  const appDir = path.join(APPS_DIR, appName);
+  const indexPath = path.join(appDir, 'index.html');
 
-  if (!appName || !fs.existsSync(appPath)) {
-    return next();
-  }
-
-  const indexPath = path.join(appPath, 'index.html');
-  if (!fs.existsSync(indexPath)) {
+  if (!fs.existsSync(appDir) || !fs.existsSync(indexPath)) {
     return next();
   }
 
   let html = fs.readFileSync(indexPath, 'utf8');
 
-  // Inject top bar if not already present
-  if (!html.includes('web-apps-topbar')) {
+  if (!html.includes('id="web-apps-topbar"')) {
     const topbar = `
       <div id="web-apps-topbar" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#18181b;border-bottom:1px solid #27272a;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:system-ui,-apple-system,sans-serif;">
         <a href="/" style="color:#a1a1aa;text-decoration:none;font-size:15px;display:flex;align-items:center;gap:6px;">
@@ -103,7 +98,6 @@ app.use((req, res, next) => {
       <div style="height:52px;"></div>
     `;
 
-    // Try to inject after <body>
     if (html.includes('<body')) {
       html = html.replace(/<body[^>]*>/i, match => match + topbar);
     } else {
@@ -114,8 +108,8 @@ app.use((req, res, next) => {
   res.send(html);
 });
 
-// Fallback static serving
-app.use(express.static(APPS_DIR, { index: 'index.html' }));
+// Serve static assets from apps (js, css, images, etc.)
+app.use('/:appName', express.static(APPS_DIR, { index: false }));
 
 app.listen(PORT, () => {
   console.log(`Web Apps server running on port ${PORT}`);
