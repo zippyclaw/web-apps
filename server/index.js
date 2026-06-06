@@ -44,6 +44,13 @@ app.get('/', (req, res) => {
         --wa-text-secondary: #a1a1aa;
       }
     }
+    .app-card {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .app-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
   </style>
 </head>
 <body class="bg-[var(--wa-bg)] text-[var(--wa-text)]">
@@ -60,9 +67,9 @@ app.get('/', (req, res) => {
     <div class="grid grid-cols-1 gap-3">
       ${apps.length > 0 ? apps.map(app => `
         <a href="/${app}" 
-           class="group flex items-center justify-between bg-[var(--wa-card)] hover:bg-[var(--wa-card)] active:bg-[var(--wa-card)] border border-[var(--wa-border)] rounded-2xl px-5 py-4 transition-colors">
+           class="app-card group flex items-center justify-between bg-[var(--wa-card)] border border-[var(--wa-border)] rounded-2xl px-5 py-4">
           <div class="flex items-center gap-4">
-            <div class="w-11 h-11 bg-[var(--wa-border)] group-hover:bg-[var(--wa-border)] rounded-2xl flex items-center justify-center text-xl">
+            <div class="w-11 h-11 bg-[var(--wa-border)] rounded-2xl flex items-center justify-center text-xl">
               ${app.charAt(0).toUpperCase()}
             </div>
             <div>
@@ -70,7 +77,7 @@ app.get('/', (req, res) => {
               <div class="text-sm text-zinc-500">Open app</div>
             </div>
           </div>
-          <div class="text-[var(--wa-text-secondary)] group-hover:text-[var(--wa-text)] transition-colors">→</div>
+          <div class="text-[var(--wa-text-secondary)] group-hover:text-[var(--wa-text)] transition-colors transition-colors">→</div>
         </a>
       `).join('') : `
         <div class="text-center py-12 text-zinc-500">
