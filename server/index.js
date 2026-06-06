@@ -28,9 +28,25 @@ app.get('/', (req, res) => {
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; }
+    :root {
+      --wa-bg: #f8f8f9;
+      --wa-card: #fff;
+      --wa-border: #e5e5e7;
+      --wa-text: #1c1c1e;
+      --wa-text-secondary: #6c6c70;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --wa-bg: #111113;
+        --wa-card: #18181b;
+        --wa-border: #3f3f46;
+        --wa-text: #f4f4f5;
+        --wa-text-secondary: #a1a1aa;
+      }
+    }
   </style>
 </head>
-<body class="bg-zinc-950 text-white">
+<body class="bg-[var(--wa-bg)] text-[var(--wa-text)]">
   <div class="max-w-2xl mx-auto px-6 py-12">
     <div class="flex items-center gap-3 mb-8">
       <div class="w-9 h-9 bg-white rounded-xl flex items-center justify-center">
@@ -39,14 +55,14 @@ app.get('/', (req, res) => {
       <h1 class="text-3xl font-semibold tracking-tight">Web Apps</h1>
     </div>
 
-    <p class="text-zinc-400 mb-8">Tap any app to open it. Works great on iPhone and Mac.</p>
+    <p class="text-[var(--wa-text-secondary)] mb-8">Tap any app to open it. Works great on iPhone and Mac.</p>
 
     <div class="grid grid-cols-1 gap-3">
       ${apps.length > 0 ? apps.map(app => `
         <a href="/${app}" 
-           class="group flex items-center justify-between bg-zinc-900 hover:bg-zinc-800 active:bg-zinc-800 border border-zinc-800 rounded-2xl px-5 py-4 transition-colors">
+           class="group flex items-center justify-between bg-[var(--wa-card)] hover:bg-[var(--wa-card)] active:bg-[var(--wa-card)] border border-[var(--wa-border)] rounded-2xl px-5 py-4 transition-colors">
           <div class="flex items-center gap-4">
-            <div class="w-11 h-11 bg-zinc-800 group-hover:bg-zinc-700 rounded-2xl flex items-center justify-center text-xl">
+            <div class="w-11 h-11 bg-[var(--wa-border)] group-hover:bg-[var(--wa-border)] rounded-2xl flex items-center justify-center text-xl">
               ${app.charAt(0).toUpperCase()}
             </div>
             <div>
@@ -54,7 +70,7 @@ app.get('/', (req, res) => {
               <div class="text-sm text-zinc-500">Open app</div>
             </div>
           </div>
-          <div class="text-zinc-600 group-hover:text-white transition-colors">→</div>
+          <div class="text-[var(--wa-text-secondary)] group-hover:text-[var(--wa-text)] transition-colors">→</div>
         </a>
       `).join('') : `
         <div class="text-center py-12 text-zinc-500">
@@ -63,7 +79,7 @@ app.get('/', (req, res) => {
       `}
     </div>
 
-    <div class="mt-12 text-center text-xs text-zinc-600">
+    <div class="mt-12 text-center text-xs text-[var(--wa-text-secondary)]">
       Accessible on your Tailnet • Mobile friendly
     </div>
   </div>
