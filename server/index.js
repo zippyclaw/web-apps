@@ -6,9 +6,6 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const APPS_DIR = path.join(__dirname, '../apps');
 
-// Serve static files for each app
-app.use(express.static(APPS_DIR, { index: 'index.html' }));
-
 // Homepage - list all apps
 app.get('/', (req, res) => {
   let apps = [];
@@ -77,7 +74,49 @@ app.get('/', (req, res) => {
   res.send(html);
 });
 
+// Serve apps with a consistent top bar
+app.use((req, res, next) => {
+  const appName = req.path.split('/')[1];
+  const appPath = path.join(APPS_DIR, appName);
+
+  if (!appName || !fs.existsSync(appPath)) {
+    return next();
+  }
+
+  const indexPath = path.join(appPath, 'index.html');
+  if (!fs.existsSync(indexPath)) {
+    return next();
+  }
+
+  let html = fs.readFileSync(indexPath, 'utf8');
+
+  // Inject top bar if not already present
+  if (!html.includes('web-apps-topbar')) {
+    const topbar = `
+      <div id="web-apps-topbar" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#18181b;border-bottom:1px solid #27272a;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:system-ui,-apple-system,sans-serif;">
+        <a href="/" style="color:#a1a1aa;text-decoration:none;font-size:15px;display:flex;align-items:center;gap:6px;">
+          ← <span style="font-weight:500;color:#e4e4e7;">Home</span>
+        </a>
+        <div style="color:#e4e4e7;font-weight:600;font-size:15px;">${appName}</div>
+        <div style="width:60px;"></div>
+      </div>
+      <div style="height:52px;"></div>
+    `;
+
+    // Try to inject after <body>
+    if (html.includes('<body')) {
+      html = html.replace(/<body[^>]*>/i, match => match + topbar);
+    } else {
+      html = topbar + html;
+    }
+  }
+
+  res.send(html);
+});
+
+// Fallback static serving
+app.use(express.static(APPS_DIR, { index: 'index.html' }));
+
 app.listen(PORT, () => {
   console.log(`Web Apps server running on port ${PORT}`);
-  console.log(`→ http://localhost:${PORT}`);
 });
