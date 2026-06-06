@@ -74,9 +74,11 @@ app.get('/', (req, res) => {
   res.send(html);
 });
 
-// Inject top navigation bar for apps
+// Inject top bar for app roots (must come before static)
 app.get('/:appName', (req, res, next) => {
   const { appName } = req.params;
+  if (!appName) return next();
+
   const appDir = path.join(APPS_DIR, appName);
   const indexPath = path.join(appDir, 'index.html');
 
@@ -108,8 +110,8 @@ app.get('/:appName', (req, res, next) => {
   res.send(html);
 });
 
-// Serve static assets from apps (js, css, images, etc.)
-app.use('/:appName', express.static(APPS_DIR, { index: false }));
+// Serve static assets (js, css, images, etc.)
+app.use(express.static(APPS_DIR, { index: false }));
 
 app.listen(PORT, () => {
   console.log(`Web Apps server running on port ${PORT}`);
